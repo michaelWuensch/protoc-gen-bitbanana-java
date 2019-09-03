@@ -1,0 +1,43 @@
+apply plugin: 'java-library'
+apply plugin: 'java'
+apply plugin: "com.github.johnrengelman.shadow"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.protobuf:protobuf-java:3.9.1'
+}
+
+buildscript {
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.1.0"
+    }
+    repositories {
+        jcenter()
+        google()
+    }
+}
+allprojects {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+clean {
+    file('build/generated').deleteDir()
+}
+
+task createJarWithDependencies(type: Jar) {
+    baseName = "protoc_zap"
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+
+    }
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
