@@ -102,7 +102,9 @@ public class ProtocPlugin {
     }
 
     private static void startInterface(StringBuilder stringBuilder, String name) {
-        stringBuilder.append(INTERFACE)
+        stringBuilder.append(PUBLIC)
+                .append(SPACE)
+                .append(INTERFACE)
                 .append(SPACE)
                 .append(name)
                 .append(SPACE)
