@@ -8,7 +8,7 @@ import java.io.IOException;
 import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_GRPC_CHANNEL;
 import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_GRPC_CREDENTIALS;
 import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_LNDMOBILE;
-import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_LNRPC;
+import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_RPC_PACKAGE_PREFIX;
 import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_OBSERVABLE;
 import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_PROTOCOL_EX;
 import static zapsolutions.zap.protoc.Constants.ClassNames.FQ_NAME_SINGLE;
@@ -52,11 +52,11 @@ public class ProtocPlugin {
 
                 // implementations
                 PluginProtos.CodeGeneratorResponse.File.Builder localImplementationBuilder = responseBuilder.addFileBuilder();
-                generateImplementation(localImplementationBuilder, serviceDescriptor, LOCAL);
+                generateImplementation(localImplementationBuilder, serviceDescriptor, LOCAL, fileDescriptorProto);
                 localImplementationBuilder.build();
 
                 PluginProtos.CodeGeneratorResponse.File.Builder remoteImplementationBuilder = responseBuilder.addFileBuilder();
-                generateImplementation(remoteImplementationBuilder, serviceDescriptor, REMOTE);
+                generateImplementation(remoteImplementationBuilder, serviceDescriptor, REMOTE, fileDescriptorProto);
                 remoteImplementationBuilder.build();
             });
 
@@ -134,9 +134,10 @@ public class ProtocPlugin {
                 .append(NEWLINE);
     }
 
-    private static void generateImplementation(PluginProtos.CodeGeneratorResponse.File.Builder fileBuilder, DescriptorProtos.ServiceDescriptorProto serviceDescriptorProto, String type) {
+    private static void generateImplementation(PluginProtos.CodeGeneratorResponse.File.Builder fileBuilder, DescriptorProtos.ServiceDescriptorProto serviceDescriptorProto, String type, DescriptorProtos.FileDescriptorProto fileDescriptorProto) {
         StringBuilder fileContent = new StringBuilder();
         String serviceName = serviceDescriptorProto.getName();
+        String packageName = fileDescriptorProto.getPackage();
         String serviceNameInterface = "Lnd" + serviceName + "Service";
         String serviceNameImplementation = type + "Lnd" + serviceName + "Service";
         fileBuilder.setName(serviceNameImplementation + ".java");
@@ -145,7 +146,7 @@ public class ProtocPlugin {
         fileContent.append(PACKAGE).append(SPACE).append(FQ_NAME_ZAP_LND).append(SEMICOLON);
         fileContent.append(NEWLINE);
 
-        appendImplementationImports(fileContent, type, serviceName);
+        appendImplementationImports(fileContent, type, serviceName, packageName);
 
         // start class
         startClass(fileContent, serviceNameImplementation, serviceNameInterface);
@@ -185,7 +186,7 @@ public class ProtocPlugin {
 
         String methodName = Character.toLowerCase(methodDescriptorProto.getName().charAt(0)) + methodDescriptorProto.getName().substring(1);
         if (type.equals(LOCAL)) {
-            String returnType = methodDescriptorProto.getOutputType().replace(".lnrpc", FQ_NAME_LNRPC);
+            String returnType = FQ_NAME_RPC_PACKAGE_PREFIX + methodDescriptorProto.getOutputType();
             appendLocalMethodBlob(stringBuilder, methodName, returnType, streamingType);
         } else if (type.equals(REMOTE)) {
             appendRemoteMethodBlob(stringBuilder, methodName, streamingType);
@@ -253,7 +254,7 @@ public class ProtocPlugin {
         fileContent.append(NEWLINE);
     }
 
-    private static void appendImplementationImports(StringBuilder fileContent, String type, String serviceName) {
+    private static void appendImplementationImports(StringBuilder fileContent, String type, String serviceName, String packageName) {
         fileContent.append(NEWLINE);
         fileContent.append(IMPORT).append(SPACE).append(FQ_NAME_OBSERVABLE).append(SEMICOLON).append(NEWLINE);
         fileContent.append(IMPORT).append(SPACE).append(FQ_NAME_SINGLE).append(SEMICOLON).append(NEWLINE);
@@ -264,7 +265,7 @@ public class ProtocPlugin {
                 fileContent.append(IMPORT).append(SPACE).append(FQ_NAME_PROTOCOL_EX).append(SEMICOLON).append(NEWLINE);
                 break;
             case REMOTE:
-                fileContent.append(IMPORT).append(SPACE).append("com.github.lightningnetwork.lnd.lnrpc.").append(serviceName).append("Grpc").append(SEMICOLON).append(NEWLINE);
+                fileContent.append(IMPORT).append(SPACE).append(FQ_NAME_RPC_PACKAGE_PREFIX).append(".").append(packageName).append(".").append(serviceName).append("Grpc").append(SEMICOLON).append(NEWLINE);
                 fileContent.append(IMPORT).append(SPACE).append(FQ_NAME_GRPC_CREDENTIALS).append(SEMICOLON).append(NEWLINE);
                 fileContent.append(IMPORT).append(SPACE).append(FQ_NAME_GRPC_CHANNEL).append(SEMICOLON).append(NEWLINE);
                 break;
@@ -283,8 +284,8 @@ public class ProtocPlugin {
 
     private static void appendSignature(StringBuilder data, DescriptorProtos.MethodDescriptorProto methodDescriptorProto, String modifier, Constants.StreamingType streamingType) {
         data.append(NEWLINE);
-        String fqNameRequest = methodDescriptorProto.getInputType().replace(".lnrpc", FQ_NAME_LNRPC);
-        String returnType = methodDescriptorProto.getOutputType().replace(".lnrpc", FQ_NAME_LNRPC);
+        String fqNameRequest = FQ_NAME_RPC_PACKAGE_PREFIX + methodDescriptorProto.getInputType();
+        String returnType = FQ_NAME_RPC_PACKAGE_PREFIX + methodDescriptorProto.getOutputType();
         String methodName = Character.toLowerCase(methodDescriptorProto.getName().charAt(0)) + methodDescriptorProto.getName().substring(1);
 
         data.append(TAB);
