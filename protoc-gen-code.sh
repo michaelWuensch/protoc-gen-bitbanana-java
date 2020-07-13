@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp build/libs/protoc-gen-zap-java-all.jar zapsolutions.zap.protoc.ProtocPlugin "$@"
+java -cp build/libs/${PWD##*/}-all.jar zapsolutions.zap.protoc.ProtocPlugin "$@"
