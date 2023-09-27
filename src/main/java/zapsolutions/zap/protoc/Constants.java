@@ -27,7 +27,7 @@ public class Constants {
     }
 
     static final class ClassNames {
-        static final String FQ_NAME_ZAP_LND = "zapsolutions.zap.lnd";
+        static final String FQ_NAME_ZAP_LND = "app.michaelwuensch.bitbanana.lnd";
         static final String FQ_NAME_RPC_PACKAGE_PREFIX = "com.github.lightningnetwork.lnd";
         static final String FQ_NAME_OBSERVABLE = "io.reactivex.rxjava3.core.Observable";
         static final String FQ_NAME_SINGLE = "io.reactivex.rxjava3.core.Single";
