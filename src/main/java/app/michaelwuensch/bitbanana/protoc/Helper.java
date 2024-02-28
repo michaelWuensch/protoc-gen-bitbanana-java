@@ -1,4 +1,4 @@
-package zapsolutions.zap.protoc;
+package app.michaelwuensch.bitbanana.protoc;
 
 import com.google.protobuf.DescriptorProtos;
 

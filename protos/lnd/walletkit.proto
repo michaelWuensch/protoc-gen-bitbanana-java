@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "lightning.proto";
-import "signer.proto";
+import "protos/lnd/lightning.proto";
+import "protos/lnd/signer.proto";
 
 package walletrpc;
 
