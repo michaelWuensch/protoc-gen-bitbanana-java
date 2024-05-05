@@ -27,8 +27,8 @@ public class Constants {
     }
 
     static final class ClassNames {
-        static final String FQ_NAME_BITBANANA_LND = "app.michaelwuensch.bitbanana.backends.lnd";
-        static final String FQ_NAME_BITBANANA_CORE_LIGHTNING = "app.michaelwuensch.bitbanana.backends.coreLightning";
+        static final String FQ_NAME_BITBANANA_LND = "app.michaelwuensch.bitbanana.backends.lnd.services";
+        static final String FQ_NAME_BITBANANA_CORE_LIGHTNING = "app.michaelwuensch.bitbanana.backends.coreLightning.services";
         static final String FQ_NAME_RPC_PACKAGE_PREFIX_LND = "com.github.lightningnetwork.lnd";
         static final String FQ_NAME_RPC_PACKAGE_PREFIX_CORE_LIGHTNING = "com.github.ElementsProject.lightning";
         static final String FQ_NAME_OBSERVABLE = "io.reactivex.rxjava3.core.Observable";
