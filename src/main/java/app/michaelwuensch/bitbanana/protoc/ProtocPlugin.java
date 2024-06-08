@@ -233,7 +233,7 @@ public class ProtocPlugin {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1); // remove semicolon
         stringBuilder.append(SPACE).append(BRACES_OPEN).append(NEWLINE);
 
-        String methodName = Character.toLowerCase(methodDescriptorProto.getName().charAt(0)) + methodDescriptorProto.getName().substring(1);
+        String methodName = Character.toLowerCase(methodDescriptorProto.getName().charAt(0)) + methodDescriptorProto.getName().substring(1).replace("_", "");
         if (type.equals(LOCAL)) {
             String returnType = FQ_NAME_RPC_PACKAGE_PREFIX_LND + methodDescriptorProto.getOutputType();
             appendLocalMethodBlob(stringBuilder, methodName, returnType, streamingType);
