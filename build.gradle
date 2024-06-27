@@ -29,7 +29,7 @@ clean {
 }
 
 task createJarWithDependencies(type: Jar) {
-    baseName = "protoc_zap"
+    baseName = "protoc_bitbanana"
 
     from {
         configurations.compile.collect {

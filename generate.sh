@@ -5,4 +5,4 @@
 
 # generate java
 mkdir build/generated
-protoc -I/usr/local/include -I. --plugin=protoc-gen-custom=protoc-gen-code.sh --custom_out=build/generated protos/**/*.proto
+protoc -I/usr/local/include -I. --plugin=protoc-gen-custom=protoc-gen-code.sh --experimental_allow_proto3_optional --custom_out=build/generated protos/**/*.proto
